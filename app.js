@@ -7,14 +7,16 @@ const auth = require("./auth");
 const expressSession = require("express-session");
 const flash = require("express-flash");
 var fetch = require("node-fetch");
+var index = require("./routes/index");
+//var users = require('./routes/users');
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 require("dotenv").load();
+let userSpeak
 app.use(
   "/socket.io",
   express.static(__dirname + "node_modules/socket.io-client/dist/")
 );
-server.listen(3000);
 
 // Local
 
@@ -90,7 +92,7 @@ app.use(
 //middleware to connect to MongoDB via mongoose in your `app.js`
 // ----------------------------------------
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/assignment_passport_scrapbook");
+mongoose.connect("mongodb://localhost/chainsaw");
 app.use((req, res, next) => {
   if (mongoose.connection.readyState) {
     next();
@@ -108,10 +110,14 @@ app.use(express.static(`${__dirname}/public`));
 //Passport Strategies
 //---------------------------------------
 //---------------------
-//**Local Strategy
+//** Strategy
 //---------------------
 passport.use(
-  new LocalStrategy(function(email, password, done) {
+  new LocalStrategy({ usernameField: "email" }, function(
+    email,
+    password,
+    done
+  ) {
     User.findOne({ email }, function(err, user) {
       if (err) return done(err);
       if (!user || !user.validPassword(password)) {
@@ -161,12 +167,11 @@ passport.use(
       const displayName = profile.displayName;
       const email = profile.emails[0].value;
       const photo = profile.photos[0].value;
-      console.log(displayName)
+      console.log(displayName);
       User.findOne({ facebookId }, function(err, user) {
         if (err) return done(err);
 
         if (!user) {
-          
           user = new User({
             facebookId,
             displayName,
@@ -191,19 +196,26 @@ let places2 = [];
 // ----------------------------------------
 //Routes
 // ----------------------------------------
+
 app.get("/", async (req, res) => {
   try {
     console.log(req.session);
+
     if (req.session.passport && req.session.passport.user) {
       let currentUser = await User.findById(req.session.passport.user);
-      console.log("here")
-      console.log(currentUser.displayName)
-      let user = currentUser.displayName
-   
-      console.log(places2)
+      console.log("here");
+      console.log(currentUser);
+      let user = currentUser.displayName;
+      let userSpeak = user;
+      console.log(userSpeak)
+      console.log("!?!")
+      let messages = [];
+
       //rendering user event search values set in post route
       res.render("welcome/index", {
-        user: user, places1: places1, places2: places2
+        user: user,
+        places1: places1,
+        places2: places2
       });
     } else {
       res.redirect("/login");
@@ -211,6 +223,17 @@ app.get("/", async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+io.on("connection", client => {
+  console.log(userSpeak);
+  console.log("hi!!");
+
+  client.on("chat", data => {
+    console.log(data);
+    console.log("!!!!!");
+    io.emit("new message", data);
+  });
 });
 
 app.get("/login", (req, res) => {
@@ -232,7 +255,8 @@ app.post(
 
 app.post("/register", (req, res, next) => {
   const { email, password } = req.body;
-  const user = new User({ email, password });
+  const user = new User({ email, password, email });
+  console.log(user);
   user.save(err => {
     res.redirect("/login");
   });
@@ -241,10 +265,10 @@ app.post("/register", (req, res, next) => {
 app.post("/search", async (req, res, next) => {
   const search = req.body.zip;
   console.log(req.body);
-  console.log('here--------------')
+  console.log("here--------------");
   const places = req.body.places;
   const event = req.body.events;
-  console.log(req.body.events)
+  console.log(req.body.events);
   await fetch(
     `https://api.yelp.com/v3/businesses/search?categories=${places}&location=${
       search
@@ -260,40 +284,38 @@ app.post("/search", async (req, res, next) => {
   )
     .then(res => res.json())
     .then(resJSON => {
-         places1 = resJSON.businesses;
-         places1 =  places1.slice(0,10)
-         
+      places1 = resJSON.businesses;
+      places1 = places1.slice(0, 10);
     })
 
     .catch(err => {
       console.log("err", err);
     });
 
- 
-
-await fetch(
-    `http://api.eventful.com/json/events/search?app_key=F4sk7TsmpZDcgs7z&category=${event}&location=${search}&date=Today`,
+  await fetch(
+    `http://api.eventful.com/json/events/search?app_key=F4sk7TsmpZDcgs7z&category=${
+      event
+    }&location=${search}&date=Today`,
     {
       method: "GET"
     }
   )
     .then(res => res.json())
     .then(resJSON => {
-       places2 =  resJSON.events.event;
-       
+      places2 = resJSON.events.event;
     })
 
     .catch(err => {
       console.log("err", err);
     });
-   
- res.redirect("back");
+
+  res.redirect("back");
 });
 
 app.get("/logout", async function(req, res) {
   await req.logout();
   places1 = [];
-  places2 =[];
+  places2 = [];
   res.redirect("login");
 });
 
@@ -313,6 +335,6 @@ app.get(
   })
 );
 
-
+server.listen(3000);
 
 module.exports = app;
