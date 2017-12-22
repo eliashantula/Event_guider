@@ -206,7 +206,7 @@ app.get("/", async (req, res) => {
       console.log("here");
       console.log(currentUser);
       let user = currentUser.displayName;
-      let userSpeak = user;
+      let userSpeak = currentUser.displayName
       console.log(userSpeak)
       console.log("!?!")
       let messages = [];
@@ -255,7 +255,7 @@ app.post(
 
 app.post("/register", (req, res, next) => {
   const { email, password } = req.body;
-  const user = new User({ email, password, email });
+  const user = new User({ email, password, displayName:email });
   console.log(user);
   user.save(err => {
     res.redirect("/login");

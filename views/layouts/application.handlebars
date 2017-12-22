@@ -45,7 +45,7 @@
           socket.emit('chat', message);
         });
         socket.on("new message", data=>{
-          $('#msg').append(`<tr><td><h4 style="color:red">${data}</h4></td></tr>`);
+          $('#msg').append(`<tr><td><h4 style="color:red"><span style="color:blue">{{user}}</span>: ${data}</h5></td></tr>`);
         });
       
       })
