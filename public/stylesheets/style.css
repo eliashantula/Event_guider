@@ -1,0 +1,50 @@
+body {
+  padding: 10px;
+  font-family: 'Cuprum', sans-serif;
+  font-size: 20px;
+}
+
+a {
+  color: #00B7FF;
+}
+.container-fluid{
+    height: 100%;
+    padding: 0px;
+    width: 100%;
+    margin: 0px;
+    
+}
+
+.navbar {
+    text-align: center;
+}
+.search{
+    height: 100%;
+    text-align: center;
+}
+.row {
+    
+    height: 60%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.col-md-4 {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: 2px solid black;
+    border-radius: 15px
+    
+}
+
+.container-full {
+    	/* Full height */
+    background-image: url('../images/crowd.jpg');
+    background-position: center ;
+	height: 1600px;
+    background-attachment: fixed;
+	/* Center and scale the image nicely */
+	/*background-position: center;
+	

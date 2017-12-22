@@ -1,0 +1,108 @@
+
+<div class="row">
+    
+    <div class="col-md-3" style="background-color:white;">
+        <div class="search">
+    <h3>Find places to go!</h3>
+                     <form action="/search" method="post">
+  
+  <input type="text" name="zip" value="Enter a zipcode">
+  <br>
+  <select name="places" class="selectpicker" id="places">
+  <option name="bars" value="bars">Bars</option>
+  <option name="restaurants" value="restaurants">Restaurants</option>
+  <option name= "nightlife" value="nightlife">Nightlife</option>
+</select><br>
+                         <h3>Find events</h3>
+<select name="events" class="selectpicker1" id="events">
+  <option name="music" value="music">Music</option>
+  <option name="comedy" value="comedy">Comedy</option>
+  <option name= "electronic" value="music_electronic">Live Electronic Music</option>
+</select>
+
+  <input type="submit" value="Submit">
+</form>                            
+    </div>
+    </div>
+    <div class="col-md-6" style="background-color:white;">
+                    <table class="table">
+    <thead>
+        <h4 style="text-align:center">Bars, Restaurants, Nightclubs</h4>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Yelp Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+          {{#each places1 as |places|}}
+      <tr>
+        <td>{{places.name}}</td>
+        <td>{{places.location.address1}} <h4>Zip: {{places.location.zip_code}}</h4></td>
+        <td>{{places.rating}}</td>
+         
+      </tr>
+         {{/each}}
+    </tbody>
+  </table>   
+    <table class="table">
+    <thead>
+        <h4 style="text-align:center">Concerts, Comedy, Electronic Music:</h4>
+      <tr>
+        <th>Venue</th>
+        <th>Description</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+          {{#each places2 as |place1|}}
+      <tr>
+        <td>{{place1.venue_name}}</td>
+        <td>{{place1.description}}</td>
+        <td>{{place1.venue_address}}</td>
+         
+      </tr>
+         {{/each}}
+    </tbody>
+  </table>
+    
+    
+    
+    </div>
+<div class="col-md-3" style="background-color:white;">
+<h4 style="text-align:center">Welcome, {{user}}</h4>
+    <img style="height: 50%" src="./images/chat.png" />
+  
+    <div class="row chat-window col-xs-5 col-md-3" id="chat_window_1">
+        <div class="col-xs-12 col-md-12">
+        	<div class="panel panel-default">
+                <div class="panel-heading top-bar">
+                    <div class="col-md-8 col-xs-8">
+                        <h3 class="panel-title"> </h3>
+                    </div>
+                </div>
+               
+        
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+                        <span class="input-group-btn">
+                        <button class="btn btn-primary btn-sm" id="btn-chat">Send</button>
+                        </span>
+                    </div>
+                </div>
+    		</div>
+        </div>
+    </div>
+    
+    
+</div>
+                                               
+
+    </div>
+
+
+
+
+
+
