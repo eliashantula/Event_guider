@@ -10,7 +10,7 @@
     </title>
 
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+   
    <script src="/socket.io/socket.io.js"></script>
 
     <!-- Latest compiled and minified CSS -->
@@ -26,6 +26,7 @@
      
   </head>
   <body>
+       
     <header>
     {{> shared/_nav }}
       </header>
@@ -33,7 +34,7 @@
       {{{ body }}}
         
         
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script>
       let socket = io.connect('localhost:3000');
@@ -42,10 +43,12 @@
            e.preventDefault();
           let message="";
           message =$('#comment').val();
-          socket.emit('chat', message);
+          let person = '{{user}}'
+          let data1 = {p: person, m: message}
+          socket.emit('chat', data1);
         });
-        socket.on("new message", data=>{
-          $('#msg').append(`<tr><td><h4 style="color:red"><span style="color:blue">{{user}}</span>: ${data}</h5></td></tr>`);
+        socket.on("new message", data =>{
+          $('#msg').append(`<tr><td><h4 style="color:red"><span style="color:blue">${data.p}</span>: ${data.m}</h5></td></tr>`);
         });
       
       })

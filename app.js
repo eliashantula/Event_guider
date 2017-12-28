@@ -226,12 +226,12 @@ app.get("/", async (req, res) => {
 });
 
 io.on("connection", client => {
-  console.log(userSpeak);
-  console.log("hi!!");
+  
+
 
   client.on("chat", data => {
     console.log(data);
-    console.log("!!!!!");
+   
     io.emit("new message", data);
   });
 });
