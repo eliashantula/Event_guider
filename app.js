@@ -334,7 +334,9 @@ app.get(
     failureRedirect: "/login"
   })
 );
-
-server.listen(process.env.PORT || 3000);
+var port = process.env.PORT || 3000
+server.listen(port, function() {
+    console.log("App is running on port " + port);
+});
 
 module.exports = app;
