@@ -92,7 +92,7 @@ app.use(
 //middleware to connect to MongoDB via mongoose in your `app.js`
 // ----------------------------------------
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/chainsaw");
 app.use((req, res, next) => {
   if (mongoose.connection.readyState) {
     next();
