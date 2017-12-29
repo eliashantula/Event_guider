@@ -335,6 +335,6 @@ app.get(
   })
 );
 
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
 
 module.exports = app;
